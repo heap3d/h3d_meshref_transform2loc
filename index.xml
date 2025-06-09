@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="801">
+	<kit name="h3d_meshref_transform2loc" restart="YES">
+		<source target="h3d_meshref_transform2loc/index.cfg">index.cfg</source>
+		<source target="h3d_meshref_transform2loc/scripts/meshref_transform2loc.py">scripts/meshref_transform2loc.py</source>
+		<source target="h3d_meshref_transform2loc/scripts/select_nonzero_meshrefs.py">scripts/select_nonzero_meshrefs.py</source>
+	</kit>
+	<message button="Help">h3d_meshref_transform2loc Kit installation complete.</message>
+</package>
