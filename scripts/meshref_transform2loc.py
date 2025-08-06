@@ -125,27 +125,46 @@ def get_root_children(visible_only: bool) -> list[modo.Item]:
 
 
 def meshref_transform_to_locator(items: Iterable[modo.Item], tolerance: float):
-    transform_loc = None
-    for item in items:
-        if not is_meshref(item):
-            continue
+    matched_transform_groups: dict[Transforms, list[modo.Item]] = dict()
+    unprocessed_items = set(items)
 
-        if is_zero_transforms(item, tolerance):
-            continue
+    for item in unprocessed_items:
+        item_transform = get_transforms(item)
+        matched_transform = get_mached_transforms(item_transform, matched_transform_groups, tolerance)
 
-        if not transform_loc:
-            transform_loc = modo.Scene().addItem(itype=c.LOCATOR_TYPE, name=f'{item.name}{LOCATOR_SUFFIX}')
-        elif not is_transforms_matched(get_transforms(transform_loc), get_transforms(item), tolerance):
-            transform_loc = modo.Scene().addItem(itype=c.LOCATOR_TYPE, name=f'{item.name}{LOCATOR_SUFFIX}')
+        if matched_transform != item_transform:
+            matched_transform_groups.update({matched_transform: [item,]})
+        else:
+            if matched_transform not in matched_transform_groups:
+                matched_transform_groups[matched_transform] = list()
+            matched_transform_groups[matched_transform].append(item)
 
-        parent_items_to((transform_loc,), item, inplace=False)
-        parent_items_to((transform_loc,), item.parent, get_parent_index(item), inplace=True)
-        parent_items_to((item,), transform_loc, inplace=True)
-        parent_items_to(item.children(), transform_loc, index=1, inplace=True)
+    for matched_items in matched_transform_groups.values():
+        first_item = matched_items[0]
+        name = f'{first_item.name}{LOCATOR_SUFFIX}'
+        transform_loc = modo.Scene().addItem(itype=c.LOCATOR_TYPE, name=name)
+        parent_items_to((transform_loc,), first_item, inplace=False)
+        parent_items_to((transform_loc,), first_item.parent, get_parent_index(first_item), inplace=True)
+        parent_items_to(matched_items, transform_loc, inplace=True)
+        for matched_item in matched_items:
+            parent_items_to(matched_item.children(), transform_loc, index=1, inplace=True)
 
 
 def is_transforms_matched(transforms1: Transforms, transfroms2: Transforms, tolerance: float) -> bool:
     return all(v1.equals(v2, tolerance) for v1, v2 in zip(transforms1, transfroms2))
+
+
+def get_mached_transforms(
+        transform: Transforms,
+        comparing_transforms: Iterable[Transforms],
+        tolerance: float
+) -> Transforms:
+
+    for comparing_transform in comparing_transforms:
+        if is_transforms_matched(transform, comparing_transform, tolerance):
+            return comparing_transform
+
+    return transform
 
 
 if __name__ == '__main__':
