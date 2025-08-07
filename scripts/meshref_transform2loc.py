@@ -53,6 +53,8 @@ def main():
     for item in processed_items:
         item.select()
 
+    lx.eval('transform.reset all')
+
 
 def get_meshrefs(items: Iterable) -> list[modo.Item]:
     return [item for item in items if is_meshref(item)]
