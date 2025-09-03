@@ -49,6 +49,7 @@ def main():
 
     if not processed_items:
         return
+
     modo.Scene().deselect()
     for item in processed_items:
         item.select()
@@ -57,10 +58,20 @@ def main():
 
 
 def get_meshrefs(items: Iterable) -> list[modo.Item]:
+    if not items:
+        return []
+
     return [item for item in items if is_meshref(item)]
 
 
 def is_meshref(item: modo.Item) -> bool:
+    if not item:
+        return False
+
+    if not item.id:
+        print(f'{item.name=} has no id')
+        return False
+
     return True if ':' in item.id else False
 
 
