@@ -13,7 +13,13 @@ import modo
 import modo.constants as c
 import lx
 
-from h3d_utilites.scripts.h3d_utils import parent_items_to, get_parent_index, get_user_value, is_visible
+from h3d_utilites.scripts.h3d_utils import (
+    parent_items_to,
+    get_parent_index,
+    get_user_value,
+    is_visible,
+    execution_time_alarm,
+    )
 
 
 Transforms = tuple[modo.Vector3, modo.Vector3, modo.Vector3]
@@ -23,6 +29,7 @@ LOCATOR_SUFFIX = ' loc'
 USERVAL_NAME_TOLERANCE = 'h3d_mtl_zero_treshold'
 
 
+@execution_time_alarm()
 def main():
     TOLERANCE = get_user_value(USERVAL_NAME_TOLERANCE)
 

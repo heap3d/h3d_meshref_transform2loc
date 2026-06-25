@@ -20,9 +20,11 @@ from scripts.meshref_transform2loc import (
     get_children,
     get_root_children,
     meshref_transform_to_locator,
+    execution_time_alarm,
 )
 
 
+@execution_time_alarm()
 def main():
     TOLERANCE = get_user_value(USERVAL_NAME_TOLERANCE)
 

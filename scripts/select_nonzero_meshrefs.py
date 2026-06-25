@@ -10,11 +10,12 @@
 import modo
 import modo.constants as c
 
-from h3d_utilites.scripts.h3d_utils import get_user_value
+from h3d_utilites.scripts.h3d_utils import get_user_value, execution_time_alarm
 
 from scripts.meshref_transform2loc import USERVAL_NAME_TOLERANCE, get_nonzero_items, get_meshrefs
 
 
+@execution_time_alarm()
 def main():
     TOLERANCE = get_user_value(USERVAL_NAME_TOLERANCE)
 
