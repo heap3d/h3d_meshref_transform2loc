@@ -19,6 +19,7 @@ from h3d_utilites.scripts.h3d_utils import (
     get_user_value,
     is_visible,
     execution_time_alarm,
+    select_if_exists,
     )
 
 
@@ -57,11 +58,11 @@ def main():
     if not processed_items:
         return
 
-    modo.Scene().deselect()
-    for item in processed_items:
-        item.select()
-
+    select_if_exists(processed_items)
     lx.eval('transform.reset all')
+
+    parents = [item.parent for item in processed_items if item.parent]
+    select_if_exists(parents)
 
 
 def get_meshrefs(items: Iterable) -> list[modo.Item]:

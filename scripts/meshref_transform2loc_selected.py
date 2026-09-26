@@ -21,6 +21,7 @@ from scripts.meshref_transform2loc import (
     get_root_children,
     meshref_transform_to_locator,
     execution_time_alarm,
+    select_if_exists,
 )
 
 
@@ -54,11 +55,11 @@ def main():
     if not processed_items:
         return
 
-    modo.Scene().deselect()
-    for item in processed_items:
-        item.select()
-
+    select_if_exists(processed_items)
     lx.eval('transform.reset all')
+
+    parents = [item.parent for item in processed_items if item.parent]
+    select_if_exists(parents)
 
 
 if __name__ == '__main__':
